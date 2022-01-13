@@ -1,0 +1,17 @@
+run = "npm start"
+
+entrypoint = "index.js"
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true
+guessImports = false
+
+[languages.javascript]
+pattern = "**/*.js"
+staynx = "javascript"
+
+[languages.javascript.languageServer]
+start = [ "typescript-language-server", "--stdio" ]
