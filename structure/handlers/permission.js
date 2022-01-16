@@ -4,11 +4,11 @@ import {
   ButtonInteraction
 } from "discord.js";
 import { TextCommand, SlashCommand } from "./command.js";
-import ButtonHandler from "./button.js";
+import Button from "./button.js";
 
 export default class PermissionHandler {
   /**
-   * @param {(TextCommand | SlashCommand | ButtonHandler)} command
+   * @param {(TextCommand | SlashCommand | Button)} command - Can be a button
    */
   constructor(command) {
     this.command = command;

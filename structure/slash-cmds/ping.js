@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { SlashCommand } from "../handlers/command.js";
 
 /**
- * @returns {Promise}
+ * @returns {Promise<number>}
  */
 function getInteractionPing(interaction, reply) {
   return new Promise((resolve, reject) => {

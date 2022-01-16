@@ -2,6 +2,7 @@ import Discord from "discord.js";
 import { Routes } from "discord-api-types/v9";
 import { REST } from "@discordjs/rest";
 import { TextCommand, SlashCommand } from "./handlers/command.js";
+import Button from "./handlers/button.js"
 import {
   CmdInteraction,
   BtnInteraction,
@@ -9,6 +10,7 @@ import {
 } from "./handlers/sub-event.js";
 import {
   registerTextCommands,
+  registerButtons,
   registerEvents
 } from "./register.js";
 import fs from "fs";
@@ -45,6 +47,11 @@ export default class Client extends Discord.Client {
     this.slashCmds = new Discord.Collection();
     
     /**
+     * @type {Discord.Collection<string, Button>}
+     */
+    this.registeredBtns = new Discord.Collection();
+    
+    /**
      * @type {Configuration}
      */
     this.config = config;
@@ -74,6 +81,7 @@ export default class Client extends Discord.Client {
   async start() {
     try {
       await registerTextCommands(this);
+      await registerButtons(this);
     
       const unfilteredSlash = await fs.promises.readdir("./structure/slash-cmds");
       const slashCmdFiles = await unfilteredSlash.filter(file => file.endsWith(".js"));

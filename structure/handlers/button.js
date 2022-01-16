@@ -25,11 +25,10 @@ function OnButtonClick(interaction, client) {}
  * @property {string[]} roleIds
  */
 
-export default class ButtonHandler {
+export default class Button {
   /**
    * @typedef {Object} ButtonHandlerOptions
-   * @property {string} btnId
-   * @property {*} data
+   * @property {string} id
    * @property {Array} [permissions]
    * @property {BtnGuildUsers} [users]
    * @property {BtnRole} [roles]
@@ -40,8 +39,7 @@ export default class ButtonHandler {
    * @param {ButtonHandlerOptions} options
    */
   constructor(options) {
-    this.btnId = options.btnId;
-    this.data = options.data;
+    this.id = options.id;
     this.permissions = options.permissions;
     this.users = options.users;
     this.roles = options.roles;

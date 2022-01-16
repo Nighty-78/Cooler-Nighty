@@ -1,5 +1,6 @@
 import Client from "./client.js";
 import Event from "./handlers/event.js";
+import Button from "./handlers/button.js";
 import { TextCommand } from "./handlers/command.js";
 import fs from "fs";
 
@@ -40,5 +41,24 @@ export async function registerEvents(client) {
      */
     const { default: event } = await import(`./events/${files[i]}`);
     client.on(event.name, event.run.bind(null, client));
+  }
+}
+
+export async function registerButtons(client) {
+  const unfilteredBtns = await fsPromises.readdir("./structure/btn-data");
+  const btnFiles = await unfilteredBtns.filter(file => file.endsWith(".js"));
+  const btnPromises = await btnFiles.map(async(file) => {
+    const { default: btn } = await import(`./btn-data/${file}`);
+    return btn;
+  });
+  
+  /**
+   * @type {Button[]}
+   */
+  const buttons = await Promise.all(btnPromises);
+  
+  for (const button of buttons) {
+    await client.registeredBtns.set(button.id, button);
+    console.log(`[Button] - Registered button listener of: ${button.id}`);
   }
 }
