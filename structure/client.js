@@ -2,13 +2,7 @@ import { Routes } from "discord-api-types/v9";
 import { REST } from "@discordjs/rest";
 import { TextCommand, SlashCommand } from "./handlers/command.js";
 import Button from "./handlers/button.js";
-import DJS, {
-  Client as DjsClient,
-  Collection,
-  CommandInteraction,
-  ButtonInteraction,
-  SelectMenuInteraction
-} from "discord.js";
+import DJS from "discord.js";
 import {
   CmdInteraction,
   BtnInteraction,
@@ -21,7 +15,7 @@ import {
 } from "./register.js";
 import fs from "fs";
 
-export default class Client extends DjsClient {
+export default class Client extends DJS.Client {
   /**
    * @typedef {Object} PrivateConfigOptions
    * @property {string} token
@@ -44,19 +38,19 @@ export default class Client extends DjsClient {
   constructor(options, config) {
     super(options);
     /**
-     * @type {Collection<string, TextCommand>}
+     * @type {DJS.Collection<string, TextCommand>}
      */
-    this.commands = new Collection();
+    this.commands = new DJS.Collection();
     
     /**
-     * @type {Collection<string, SlashCommand>}
+     * @type {DJS.Collection<string, SlashCommand>}
      */
-    this.slashCmds = new Collection();
+    this.slashCmds = new DJS.Collection();
     
     /**
-     * @type {Collection<string, Button>}
+     * @type {DJS.Collection<string, Button>}
      */
-    this.registeredBtns = new Collection();
+    this.registeredBtns = new DJS.Collection();
     
     /**
      * @type {Configuration}
@@ -165,7 +159,7 @@ export default class Client extends DjsClient {
   
   /**
    * @param {("CMD" | "BTN" | "SELECT")} type
-   * @param {(CommandInteraction | ButtonInteraction | SelectMenuInteraction)} interaction
+   * @param {(DJS.CommandInteraction | DJS.ButtonInteraction | DJS.SelectMenuInteraction)} interaction
    */
   emitSubEvent(type, interaction) {
     if (type === "CMD") {
