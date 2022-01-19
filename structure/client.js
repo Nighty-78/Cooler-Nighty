@@ -2,9 +2,8 @@ import { Routes } from "discord-api-types/v9";
 import { REST } from "@discordjs/rest";
 import { TextCommand, SlashCommand } from "./handlers/command.js";
 import Button from "./handlers/button.js";
-import {
+import DJS, {
   Client as DjsClient,
-  ClientOptions,
   Collection,
   CommandInteraction,
   ButtonInteraction,
@@ -39,7 +38,7 @@ export default class Client extends DjsClient {
    */
   
   /**
-   * @param {ClientOptions} options - Client options
+   * @param {DJS.ClientOptions} options - Client options
    * @param {Configuration} config - Bot configuration
    */
   constructor(options, config) {
@@ -158,7 +157,7 @@ export default class Client extends DjsClient {
         }
       }
       
-      await this.login(token);
+      await this.login(this.config.private.token);
     } catch(err) {
       console.error(err);
     }

@@ -30,8 +30,8 @@ export default class Button {
    * @typedef {Object} ButtonHandlerOptions
    * @property {string} id
    * @property {Array} [permissions]
-   * @property {BtnGuildUsers} [users]
-   * @property {BtnRole} [roles]
+   * @property {BtnGuildUsers[]} [users]
+   * @property {BtnRole[]} [roles]
    * @property {OnButtonClick} onclick
    */
   
@@ -39,16 +39,23 @@ export default class Button {
    * @param {ButtonHandlerOptions} options
    */
   constructor(options) {
+    /** @type {string} */
     this.id = options.id;
+    /** @type {Array} */
     this.permissions = options.permissions;
+    /** @type {BtnGuildUsers[]} */
     this.users = options.users;
+    /** @type {BtnRole[]} */
     this.roles = options.roles;
+    /** @type {OnButtonClick} */
     this.onclick = options.onclick;
   }
   
   /**
-   * @param {ButtonInteraction} interaction
-   * @param {Client} client
+   * Runs the button onclick function
+   * 
+   * @param {ButtonInteraction} interaction - Button interaction
+   * @param {Client} client - A new instance of Client
    */
   click(interaction, client) {
     this.onclick(interaction, client);
