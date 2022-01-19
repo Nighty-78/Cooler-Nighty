@@ -7,6 +7,8 @@ import fs from "fs";
 const fsPromises = fs.promises;
 
 /**
+ * Register text commands
+ * 
  * @param {Client} client - New instance of Client...
  */
 export async function registerTextCommands(client) {
@@ -29,6 +31,8 @@ export async function registerTextCommands(client) {
 }
 
 /**
+ * Register Client event listeners
+ * 
  * @param {Client} client - Client...
  */
 export async function registerEvents(client) {
@@ -44,6 +48,11 @@ export async function registerEvents(client) {
   }
 }
 
+/**
+ * Registers button data
+ * 
+ * @param {Client} client - A new instance of Client
+ */
 export async function registerButtons(client) {
   const unfilteredBtns = await fsPromises.readdir("./structure/btn-data");
   const btnFiles = await unfilteredBtns.filter(file => file.endsWith(".js"));

@@ -1,8 +1,15 @@
-import Discord from "discord.js";
 import { Routes } from "discord-api-types/v9";
 import { REST } from "@discordjs/rest";
 import { TextCommand, SlashCommand } from "./handlers/command.js";
-import Button from "./handlers/button.js"
+import Button from "./handlers/button.js";
+import {
+  Client as DjsClient,
+  ClientOptions,
+  Collection,
+  CommandInteraction,
+  ButtonInteraction,
+  SelectMenuInteraction
+} from "discord.js";
 import {
   CmdInteraction,
   BtnInteraction,
@@ -15,41 +22,42 @@ import {
 } from "./register.js";
 import fs from "fs";
 
-const token = process.env.TOKEN;
-const clientId = process.env.CLIENT_ID;
-
-const rest = new REST({ version: 9 }).setToken(token);
-
-export default class Client extends Discord.Client {
+export default class Client extends DjsClient {
   /**
-   * Some bot configuration options
+   * @typedef {Object} PrivateConfigOptions
+   * @property {string} token
+   * @property {string} clientId
+   */
+  
+  /**
    * @typedef {Object} Configuration
    * @property {string} prefix
    * @property {string} version
+   * @property {PrivateConfigOptions} private
    * @property {boolean} testMode
    * @property {string} testGuild
    */
   
   /**
-   * @param {Discord.ClientOptions} options - Client options
+   * @param {ClientOptions} options - Client options
    * @param {Configuration} config - Bot configuration
    */
   constructor(options, config) {
     super(options);
     /**
-     * @type {Discord.Collection<string, TextCommand>}
+     * @type {Collection<string, TextCommand>}
      */
-    this.commands = new Discord.Collection();
+    this.commands = new Collection();
     
     /**
-     * @type {Discord.Collection<string, SlashCommand>}
+     * @type {Collection<string, SlashCommand>}
      */
-    this.slashCmds = new Discord.Collection();
+    this.slashCmds = new Collection();
     
     /**
-     * @type {Discord.Collection<string, Button>}
+     * @type {Collection<string, Button>}
      */
-    this.registeredBtns = new Discord.Collection();
+    this.registeredBtns = new Collection();
     
     /**
      * @type {Configuration}
@@ -76,6 +84,8 @@ export default class Client extends Discord.Client {
       btnInteraction: [],
       selectInteraction: []
     }
+    
+    this.rest = new REST({ version: 9 }).setToken(this.config.private.token);
   }
   
   async start() {
@@ -105,13 +115,15 @@ export default class Client extends Discord.Client {
       this.on("ready", async() => {
         if (this.config.testMode === true) {
           const guild = this.config.testGuild;
-          await rest.put(Routes.applicationGuildCommands(clientId, guild), {
+          const clientId = this.config.private.clientId;
+          await this.rest.put(Routes.applicationGuildCommands(clientId, guild), {
             body: this.slashCmdData
           });
           
           delete this.slashCmdData;
         } else {
-          await rest.put(Routes.applicationCommands(clientId), {
+          const clientId = this.config.private.clientId;
+          await this.rest.put(Routes.applicationCommands(clientId), {
             body: this.slashCmdData
           });
           
@@ -154,7 +166,7 @@ export default class Client extends Discord.Client {
   
   /**
    * @param {("CMD" | "BTN" | "SELECT")} type
-   * @param {(Discord.CommandInteraction | Discord.ButtonInteraction | Discord.SelectMenuInteraction)} interaction
+   * @param {(CommandInteraction | ButtonInteraction | SelectMenuInteraction)} interaction
    */
   emitSubEvent(type, interaction) {
     if (type === "CMD") {
